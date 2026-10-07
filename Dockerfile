@@ -22,6 +22,5 @@ COPY --from=build /app/src/i18n/content.js ./src/i18n/content.js
 COPY --from=build /app/public ./public
 COPY --from=build /app/scripts ./scripts
 RUN mkdir -p /data
-VOLUME ["/data"]
 EXPOSE 3000
 CMD ["npm", "start"]
