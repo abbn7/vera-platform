@@ -1,13 +1,10 @@
-# syntax=docker/dockerfile:1
 FROM node:24-bookworm-slim AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN --mount=type=secret,id=proxy_ca \
-    if [ -f /run/secrets/proxy_ca ]; then NODE_EXTRA_CA_CERTS=/run/secrets/proxy_ca npm ci --strict-ssl=true; else npm ci; fi
+RUN npm ci
 COPY . .
 RUN npm run build
-RUN --mount=type=secret,id=proxy_ca \
-    if [ -f /run/secrets/proxy_ca ]; then NODE_EXTRA_CA_CERTS=/run/secrets/proxy_ca npm prune --omit=dev --strict-ssl=true; else npm prune --omit=dev; fi
+RUN npm prune --omit=dev
 
 FROM node:24-bookworm-slim
 ENV NODE_ENV=production DATA_DIR=/data PORT=3000
